@@ -39,6 +39,22 @@ public abstract class ArmyManager : MonoBehaviour
         return enemies.FirstOrDefault()?.gameObject;
     }
 
+    
+
+    public GameObject GetLowLifeEnnemy<T>(Vector3 centerPos, float minRadius, float maxRadius) where T : ArmyElement
+    {
+        var enemies = GetAllEnemiesOfType<T>(true).Where(
+            item => Vector3.Distance(centerPos, item.transform.position) > minRadius
+                    && Vector3.Distance(centerPos, item.transform.position) < maxRadius);
+
+        // Sélectionner l'ennemi avec la plus grande position x (le plus à droite)
+        var lowLifEnemy = enemies.OrderBy(item => item.Health).FirstOrDefault();
+
+
+        return lowLifEnemy?.gameObject;
+    }
+
+
     protected void ComputeStatistics(ref int nDrones,ref int nTurrets,ref int cumulatedHealth)
 	{
         nDrones = m_ArmyElements.Count(item => item is Drone);
